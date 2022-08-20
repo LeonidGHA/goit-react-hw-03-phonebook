@@ -8,14 +8,28 @@ import Filter from './Filter';
 
 class App extends Component {
   state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
+    contacts: [],
     filter: '',
   };
+
+  componentDidMount() {
+    console.log('didmount');
+    const localContacts = localStorage.getItem('contacts');
+    const localParsedCont = JSON.parse(localContacts);
+
+    if (localParsedCont) {
+      this.setState({ contacts: localParsedCont });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log('didupdate');
+
+    if (this.state.contacts !== prevState.contacts) {
+      console.log('work');
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   submitDataForm = data => {
     const { contacts } = this.state;
@@ -39,7 +53,7 @@ class App extends Component {
     });
   };
 
-  fiterState = () => {
+  filterState = () => {
     const { contacts, filter } = this.state;
     return contacts.filter(el =>
       el.name.toLowerCase().includes(filter.toLowerCase())
@@ -57,7 +71,7 @@ class App extends Component {
 
   render() {
     const { contacts } = this.state;
-    const renderFiterItem = this.fiterState();
+    const renderFiterItem = this.filterState();
     return (
       <div className={css.container}>
         <h1 className={css.title}>Phonebook</h1>
@@ -66,7 +80,7 @@ class App extends Component {
         <Filter onWrite={this.textFilterWrite} />
         {contacts.length !== 0 && (
           <ContactsList
-            contacts={this.fiterState(renderFiterItem)}
+            contacts={renderFiterItem}
             deleteContacts={this.deleteContacts}
           />
         )}
