@@ -13,7 +13,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    console.log('didmount');
+    // console.log('didmount');
     const localContacts = localStorage.getItem('contacts');
     const localParsedCont = JSON.parse(localContacts);
 
@@ -23,10 +23,10 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('didupdate');
+    // console.log('didupdate');
 
     if (this.state.contacts !== prevState.contacts) {
-      console.log('work');
+      // console.log('work');
       localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
     }
   }
